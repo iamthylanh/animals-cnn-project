@@ -11,9 +11,9 @@ if sys.platform.startswith('win'):
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Hỗ trợ hiển thị tiếng Việt trên Windows
 
 #Đường dẫn đến các thư mục dữ liệu đã được chuẩn bị
-train_data_dir = Path(''/content/drive/MyDrive/DoAnTHDL/dataset/train')
-test_data_dir = Path(''/content/drive/MyDrive/DoAnTHDL/dataset/test')
-val_data_dir = Path(''/content/drive/MyDrive/DoAnTHDL/dataset/val') 
+train_data_dir = Path('/content/drive/MyDrive/DoAnTHDL/dataset/train')
+test_data_dir = Path('/content/drive/MyDrive/DoAnTHDL/dataset/test')
+val_data_dir = Path('/content/drive/MyDrive/DoAnTHDL/dataset/val') 
 
 #Các tham số cấu hình
 BATCH_SIZE = 32 # tùy chỉnh theo nhu cầu
