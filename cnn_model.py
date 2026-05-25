@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
-def create_cnn_model(input_shape=(224, 224, 3), num_classes=10):
+def create_cnn_model(input_shape=(128, 128, 3), num_classes=10):
     """
     Hàm khởi tạo cấu trúc mạng CNN.
     Sử dụng các lớp: Conv2D, BatchNormalization, MaxPooling2D, và Dropout.
