@@ -16,8 +16,8 @@ test_data_dir = Path('/content/drive/MyDrive/DoAnTHDL/dataset/test')
 val_data_dir = Path('/content/drive/MyDrive/DoAnTHDL/dataset/val') 
 
 #Các tham số cấu hình
-BATCH_SIZE = 32 # tùy chỉnh theo nhu cầu
-IMG_SIZE = (224, 224)
+BATCH_SIZE = 12 # tùy chỉnh theo nhu cầu
+IMG_SIZE = (128, 128)
 
 #Hàm tải dữ liệu từ thu mục đã chuẩn bị
 def load_data(img_size = IMG_SIZE, batch_size = BATCH_SIZE):
