@@ -11,7 +11,7 @@ def main():
     train_ds = apply_augmentation(train_ds)
 
     # 2. Khởi tạo mô hình
-    model = create_cnn_model(input_shape=(224, 224, 3), num_classes=10)
+    model = create_cnn_model(input_shape=(128, 128, 3), num_classes=10)
 
     # 3. COMPILE MODEL
     model.compile(
