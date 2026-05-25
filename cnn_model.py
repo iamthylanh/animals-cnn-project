@@ -37,7 +37,8 @@ def create_cnn_model(input_shape=(128, 128, 3), num_classes=10):
     # -------------------------------------------------------------
     # KẾT NỐI (FULLY CONNECTED LAYERS) & PHÂN LOẠI
     # -------------------------------------------------------------
-    model.add(layers.Flatten())             
+    # model.add(layers.Flatten())             
+    model.add(layers.GlobalAveragePooling2D())
     
     # Tầng ẩn phân tích đặc trưng sâu
     model.add(layers.Dense(256, activation='relu'))
