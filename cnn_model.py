@@ -49,29 +49,3 @@ def create_cnn_model(input_shape=(128, 128, 3), num_classes=10):
     model.add(layers.Dense(num_classes, activation='softmax'))
     
     return model
-
-# ─────────────────────────────────────────────
-# 3. Tóm tắt model & trực quan hoá
-# ─────────────────────────────────────────────
-def print_model_summary(model: tf.keras.Model) -> None:
-    model.summary(line_length=75)
-    total_params = model.count_params()
-    trainable    = sum([tf.size(w).numpy() for w in model.trainable_weights])
-    print(f"\nTotal params     : {total_params:,}")
-    print(f"Trainable params : {trainable:,}")
-
-
-def visualize_model(model: tf.keras.Model, save_path: str = "model_architecture.png") -> None:
-    """Lưu sơ đồ kiến trúc model ra file PNG."""
-    try:
-        tf.keras.utils.plot_model(
-            model,
-            to_file=save_path,
-            show_shapes=True,
-            show_layer_names=True,
-            dpi=96,
-            expand_nested=True,
-        )
-        print(f"Model diagram saved → {save_path}")
-    except Exception as e:
-        print(f"Cannot save diagram (pydot/graphviz needed): {e}")

@@ -24,7 +24,7 @@ def main():
     callbacks = [
         tf.keras.callbacks.EarlyStopping(
             monitor='val_loss', 
-            patience=5, 
+            patience=10, 
             restore_best_weights=True
         ),
         tf.keras.callbacks.ModelCheckpoint(

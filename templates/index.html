@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hệ Thống Nhận Diện Động Vật</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 to-slate-200 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border border-slate-100">
+
+        <!-- HEADER -->
+        <div class="text-center mb-8">
+
+            <div
+                class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 text-blue-600 rounded-full mb-4 shadow-md">
+                <i class="fa-solid fa-paw text-3xl"></i>
+            </div>
+
+            <h1 class="text-3xl font-bold text-slate-800">
+                NHẬN DIỆN ĐỘNG VẬT
+            </h1>
+
+            <p class="text-slate-500 mt-2 text-sm">
+                Hệ thống AI phân loại động vật bằng Deep Learning
+            </p>
+
+        </div>
+
+        <!-- FORM -->
+        <form action="/predict" method="post" enctype="multipart/form-data" class="space-y-6">
+
+            <!-- UPLOAD -->
+            <div class="relative group">
+
+                <input
+                    type="file"
+                    name="file"
+                    id="fileInput"
+                    accept="image/*"
+                    required
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+
+                <div
+                    id="dropZone"
+                    class="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center transition-all duration-300 hover:border-blue-500 hover:bg-blue-50">
+
+                    <!-- PROMPT -->
+                    <div id="uploadPrompt"
+                        class="{% if image_data %}hidden{% else %}space-y-2{% endif %}">
+
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400"></i>
+
+                        <p class="text-slate-700 font-medium">
+                            Kéo thả hoặc nhấn để tải ảnh lên
+                        </p>
+
+                        <p class="text-xs text-slate-400">
+                            Hỗ trợ PNG, JPG, JPEG
+                        </p>
+
+                    </div>
+
+                    <!-- IMAGE PREVIEW -->
+                    <div
+                        id="imagePreviewContainer"
+                        class="{% if image_data %}space-y-3{% else %}hidden space-y-3{% endif %}">
+
+                        <img
+                            id="imagePreview"
+                            src="{% if image_data %}data:image/jpeg;base64,{{ image_data }}{% else %}#{% endif %}"
+                            alt="Preview"
+                            class="max-h-64 mx-auto rounded-xl shadow-lg object-cover">
+
+                        <p
+                            id="fileName"
+                            class="text-sm text-slate-500 font-medium truncate">
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- BUTTON -->
+            <button
+                type="submit"
+                id="predictBtn"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-2xl shadow-lg transition-all duration-200 active:scale-95 flex items-center justify-center gap-2">
+
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                <span>
+                    Tiến hành nhận diện
+                </span>
+
+            </button>
+
+        </form>
+
+        <!-- RESULT -->
+        {% if prediction %}
+
+        <div class="mt-8 border-t pt-6">
+
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+
+                <h2 class="text-sm font-bold text-slate-400 uppercase mb-4">
+
+                    <i class="fa-solid fa-chart-column mr-2"></i>
+
+                    Kết quả phân tích
+
+                </h2>
+
+                <!-- CLASS -->
+                <div class="flex justify-between items-center mb-4">
+
+                    <span class="text-slate-600">
+                        Loài động vật:
+                    </span>
+
+                    <span
+                        class="bg-blue-100 text-blue-700 px-4 py-1 rounded-xl font-bold capitalize">
+
+                        {{ prediction }}
+
+                    </span>
+
+                </div>
+
+                <!-- CONFIDENCE -->
+                <div class="flex justify-between items-center">
+
+                    <span class="text-slate-600">
+                        Độ tin cậy:
+                    </span>
+
+                    <div class="text-right">
+
+                        <span class="font-bold text-emerald-600">
+                            {{ confidence }}%
+                        </span>
+
+                        <div class="w-32 h-2 bg-slate-200 rounded-full mt-1 overflow-hidden">
+
+                            <div
+                                class="h-full bg-emerald-500 rounded-full"
+                                style="width: {{ confidence }}%">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+
+        const fileInput = document.getElementById('fileInput');
+
+        const uploadPrompt = document.getElementById('uploadPrompt');
+
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+        const imagePreview = document.getElementById('imagePreview');
+
+        const fileName = document.getElementById('fileName');
+
+        const dropZone = document.getElementById('dropZone');
+
+        const form = document.querySelector('form');
+
+        const predictBtn = document.getElementById('predictBtn');
+
+        // PREVIEW IMAGE
+        fileInput.addEventListener('change', function (e) {
+
+            const file = e.target.files[0];
+
+            if (file) {
+
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+
+                    imagePreview.src = event.target.result;
+
+                    fileName.textContent = file.name;
+
+                    uploadPrompt.classList.add('hidden');
+
+                    imagePreviewContainer.classList.remove('hidden');
+
+                    dropZone.classList.add('border-blue-400');
+
+                }
+
+                reader.readAsDataURL(file);
+
+            }
+
+        });
+
+        // LOADING BUTTON
+        form.addEventListener('submit', () => {
+
+            predictBtn.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Đang nhận diện...</span>
+            `;
+
+            predictBtn.disabled = true;
+
+        });
+
+    </script>
+
+</body>
+
+</html>
