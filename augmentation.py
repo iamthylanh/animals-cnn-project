@@ -67,4 +67,15 @@ def visualize_augmentation(dataset, class_names=None, save_path="augmentation_pr
         plt.tight_layout()
         plt.savefig(save_path)
         plt.close() 
-        print(f"Đã lưu anh trực quan hóa tăng cường dữ liệu tại: {save_path}")
+        print(f"Đã lưu ảnh trực quan hóa tăng cường dữ liệu tại: {save_path}")
+
+if __name__ == "__main__":
+    dataset = tf.keras.preprocessing.image_dataset_from_directory(
+        "dataset/train",
+        image_size=(224, 224),
+        batch_size=32
+    )
+
+    class_names = dataset.class_names
+
+    visualize_augmentation(dataset, class_names)
